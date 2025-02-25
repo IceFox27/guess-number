@@ -184,7 +184,7 @@
                     GameLogic(login, password);
                     break;
                 case 2:
-                    //PrintPlayerResults(login, password);
+                    PrintPlayerResults(login, password);
                     break;
                 case 3:
                     //printLeaderBord(login, password);
@@ -287,6 +287,40 @@
             File.WriteAllText(resultPath, string.Join(Environment.NewLine, updatedResults) + Environment.NewLine);
 
             Console.WriteLine($"Вы выиграли. Количество попыток {attempts}");
+        }
+
+        static void PrintPlayerResults(string login, string password)
+        {
+            string resultPath = "results.txt";
+
+            if (!File.Exists(resultPath))
+            {
+                Console.WriteLine("Файл результатов не существует.");
+                return;
+            }
+
+            string[] results = File.ReadAllLines(resultPath);
+
+            foreach (string result in results)
+            {
+                string[] parts = result.Split(':');
+                string player = parts[0];
+
+                if (player == login)
+                {
+                    string[] attempts = parts[1].Split('|');
+                    Console.WriteLine("Результаты игрока:");
+
+                    for (int i = 0; i < attempts.Length; i++)
+                    {
+                        Console.WriteLine($"Игра {i + 1}: {attempts[i]} попыток");
+                    }
+
+                    GameMenu(login, password);
+                }
+            }
+
+            Console.WriteLine("Игрок не найден.");
         }
     }
 }

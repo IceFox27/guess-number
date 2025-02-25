@@ -4,16 +4,14 @@
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Добро пожаловать в игру \"Угадай Число\"!");
-
             EntranceMenu();
         }
 
         static void EntranceMenu()
         {
             Console.WriteLine("Добро пожаловать в игру Guess Number!");
-            Console.WriteLine("Сперва вам нужно зарегистрироваться," +
-                " если вы уже зарегистрированы, то необходимо авторизоваться.");
+            Console.WriteLine("Сперва вам нужно зарегистрироваться");
+            Console.WriteLine("Если вы уже зарегистрированы, то войдите.");
 
             Console.WriteLine("Введите номер необходимой операции.");
             Console.WriteLine("1) Войти \n" +
@@ -138,7 +136,7 @@
                     if (password == userPassword)
                     {
                         Console.WriteLine("Авторизация успешна, вход в программу");
-                        GameLogic();
+                        GameMenu(login, password);
                     }
                     else
                     {
@@ -169,7 +167,35 @@
             return numberString;
         }
 
-        static void GameLogic()
+        static void GameMenu(string login, string password)
+        {
+            Console.WriteLine($"Добро пожаловать, {login} \n" +
+                    "1) Начать игру \n" +
+                    "2) Ваши игры \n" +
+                    "3) Таблица лидеров \n" +
+                    "4) Выход"
+                    );
+
+            int userInput = Convert.ToInt32(Console.ReadLine());
+
+            switch (userInput)
+            {
+                case 1:
+                    GameLogic(login, password);
+                    break;
+                case 2:
+                    //PrintPlayerResults(login, password);
+                    break;
+                case 3:
+                    //printLeaderBord(login, password);
+                    break;
+                case 4:
+                    Environment.Exit(0);
+                    break;
+            }
+        }
+
+        static void GameLogic(string login, string password)
         {
             string randomNumber = GetRandomNumberString();
 
@@ -210,7 +236,8 @@
                 if (rightPos == 4)
                 {
                     Console.WriteLine("Поздравляю, вы угадали число!");
-                    break;
+
+                    GameMenu(login, password);
                 }
             }
         }

@@ -7,32 +7,6 @@
             Console.WriteLine("Добро пожаловать в игру \"Угадай Число\"!");
 
             EntranceMenu();
-
-            /*
-            GameLogic();
-
-            while (true)
-            {
-                Console.WriteLine("Продолжим?");
-                Console.WriteLine("1) Да");
-                Console.WriteLine("2) Нет");
-
-                string input = Console.ReadLine();
-
-                switch (input)
-                {
-                    case "1":
-                        GameLogic();
-                        break;
-                    case "2":
-                        Console.WriteLine("Спасибо за игру! До свидания!");
-                        return;
-                    default:
-                        Console.WriteLine("Неправильный ввод. Пожалуйста, выберите 1 или 2.");
-                        break;
-                }
-            }
-            */
         }
 
         static void EntranceMenu()
@@ -51,7 +25,7 @@
             switch (userInput)
             {
                 case 1:
-                    //Authentication();
+                    Authentication();
                     break;
                 case 2:
                     Registration();
@@ -107,6 +81,69 @@
                         " Теперь вы можете войти под своим именем.");
 
                     EntranceMenu();
+                }
+            }
+        }
+
+        static void Authentication()
+        {
+            string login;
+            string password;
+            string pathToUserData = "users.txt";
+
+            if (!File.Exists(pathToUserData))
+            {
+                Console.WriteLine("В нашей базе данных нет ещё пользователей." +
+                    " Пройдите регистрацию и станьте первым!");
+
+                Registration();
+            }
+
+            while (true)
+            {
+                Console.WriteLine("Введите ваш логин: ");
+
+                login = Console.ReadLine();
+
+                string[] users = File.ReadAllLines(pathToUserData);
+                bool userExists = false;
+                string userPassword = "";
+
+                foreach (string user in users)
+                {
+                    string userLogin = user.Split(':')[0];
+
+                    if (userLogin == login)
+                    {
+                        userPassword = user.Split(':')[1];
+                        userExists = true;
+                        break;
+                    }
+                }
+
+                if (!userExists)
+                {
+                    Console.WriteLine("Пользователь не найден. Опечатка? " +
+                        "Или может быть вам необходимо зарегистрироваться?");
+
+                    EntranceMenu();
+                }
+
+                while (true)
+                {
+                    Console.Write("Ввведите ваш пароль: ");
+
+                    password = Console.ReadLine();
+
+                    if (password == userPassword)
+                    {
+                        Console.WriteLine("Авторизация успешна, вход в программу");
+                        GameLogic();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Неправильный пароль, попробуйте еще раз.");
+                    }
                 }
             }
         }

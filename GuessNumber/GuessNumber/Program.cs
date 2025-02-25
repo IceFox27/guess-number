@@ -203,6 +203,8 @@
                 "Попробуй угадать его. " +
                 "Вводи число только с неповтояющимися цифрами!");
 
+            int attempts = 0;
+
             while (true)
             {
                 Console.WriteLine("Введи своё предположение: ");
@@ -235,11 +237,56 @@
 
                 if (rightPos == 4)
                 {
-                    Console.WriteLine("Поздравляю, вы угадали число!");
+                    Console.WriteLine("Поздравляем, вы угадали число!");
+                    attempts++;
 
+                    SaveResult(login, attempts);
                     GameMenu(login, password);
                 }
+
+                attempts++;
             }
+        }
+
+        static void SaveResult(string login, int attempts)
+        {
+            string resultPath = "results.txt";
+            string result = $"{login}:{attempts}";
+
+            if (!File.Exists(resultPath))
+            {
+                File.Create(resultPath);
+            }
+
+            string[] existingResults = File.ReadAllLines(resultPath);
+            List<string> updatedResults = new List<string>();
+
+            bool existingResultsFound = false;
+
+            foreach (string existingResult in existingResults)
+            {
+                if (existingResult.StartsWith(login))
+                {
+                    string[] existingAttempts = existingResult.Split(':');
+                    string newAttempts = $"{existingAttempts[1].Trim()}|{attempts}";
+
+                    updatedResults.Add($"{login}:{newAttempts}");
+                    existingResultsFound = true;
+                }
+                else
+                {
+                    updatedResults.Add(existingResult);
+                }
+            }
+
+            if (!existingResultsFound)
+            {
+                updatedResults.Add(result);
+            }
+
+            File.WriteAllText(resultPath, string.Join(Environment.NewLine, updatedResults) + Environment.NewLine);
+
+            Console.WriteLine($"Вы выиграли. Количество попыток {attempts}");
         }
     }
 }

@@ -6,6 +6,9 @@
         {
             Console.WriteLine("Добро пожаловать в игру \"Угадай Число\"!");
 
+            EntranceMenu();
+
+            /*
             GameLogic();
 
             while (true)
@@ -27,6 +30,83 @@
                     default:
                         Console.WriteLine("Неправильный ввод. Пожалуйста, выберите 1 или 2.");
                         break;
+                }
+            }
+            */
+        }
+
+        static void EntranceMenu()
+        {
+            Console.WriteLine("Добро пожаловать в игру Guess Number!");
+            Console.WriteLine("Сперва вам нужно зарегистрироваться," +
+                " если вы уже зарегистрированы, то необходимо авторизоваться.");
+
+            Console.WriteLine("Введите номер необходимой операции.");
+            Console.WriteLine("1) Войти \n" +
+                              "2) Регистрация \n" +
+                              "3) Выход");
+
+            int userInput = Convert.ToInt32(Console.ReadLine());
+
+            switch (userInput)
+            {
+                case 1:
+                    //Authentication();
+                    break;
+                case 2:
+                    Registration();
+                    break;
+                case 3:
+                    Environment.Exit(0);
+                    break;
+            }
+        }
+
+        static void Registration()
+        {
+            string login;
+            string password;
+            string pathToUserData = "users.txt";
+
+            if (!File.Exists(pathToUserData))
+            {
+                File.Create(pathToUserData).Dispose();
+            }
+
+            while (true)
+            {
+                Console.WriteLine("Введите ваш логин: ");
+
+                login = Console.ReadLine();
+
+                string[] users = File.ReadAllLines(pathToUserData);
+                bool userExists = false;
+
+                foreach (var user in users)
+                {
+                    string userLogin = user.Split(':')[0];
+
+                    if (userLogin == login)
+                    {
+                        userExists = true;
+                        break;
+                    }
+                }
+
+                if (userExists)
+                {
+                    Console.WriteLine("Пользователь с таким именем уже существует. Выберите себе другое.");
+                }
+                else
+                {
+                    Console.WriteLine("Введите ваш пароль: ");
+                    password = Console.ReadLine();
+
+                    File.AppendAllText(pathToUserData, $"{login}:{password}" + Environment.NewLine);
+                    Console.WriteLine("Поздравляем, вы успешно зарегистрированы." +
+                        " Теперь вы можете войти под своим именем.");
+
+                    EntranceMenu();
                 }
             }
         }
